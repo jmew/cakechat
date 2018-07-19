@@ -27,7 +27,7 @@ def get_model_response():
 
     # response = get_response(dialog_context, emotion)
     dialog = [sentence]
-    emotion = "joy"
+    emotion = "neutral"
     response = get_response(dialog, emotion)
 
     if not response:
