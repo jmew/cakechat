@@ -11,7 +11,7 @@ _logger = get_logger(__name__)
 app = Flask(__name__)
 
 
-@app.route('/cakechat_api/v1/actions/get_response', methods=['POST'])
+@app.route('/felix_api/v1/actions/get_response', methods=['POST'])
 @timer
 def get_model_response():
     params = request.get_json()
@@ -24,11 +24,13 @@ def get_model_response():
     except ValueError as e:
         return get_api_error_response('Malformed request: %s' % str(e), 400, _logger)
 
-    emotion = params.get('emotion', DEFAULT_CONDITION)
-    if emotion not in EMOTIONS_TYPES:
-        return get_api_error_response('Malformed request, emotion param "%s" is not in emotion list %s' %
-                                      (emotion, list(EMOTIONS_TYPES)), 400, _logger)
+    # emotion = params.get('emotion', DEFAULT_CONDITION)
+    # if emotion not in EMOTIONS_TYPES:
+    #     return get_api_error_response('Malformed request, emotion param "%s" is not in emotion list %s' %
+    #                                   (emotion, list(EMOTIONS_TYPES)), 400, _logger)
 
+    # response = get_response(dialog_context, emotion)
+    emotion = "joy"
     response = get_response(dialog_context, emotion)
 
     if not response:
