@@ -17,12 +17,8 @@ def get_model_response():
     params = request.get_json()
     _logger.info('request params: %s' % params)
 
-    try:
-        dialog_context = parse_dataset_param(params, param_name='context')
-    except KeyError as e:
-        return get_api_error_response('Malformed request, no "%s" param was found' % str(e), 400, _logger)
-    except ValueError as e:
-        return get_api_error_response('Malformed request: %s' % str(e), 400, _logger)
+    df_req = params['queryResult']
+    sentence = df_req['queryText']
 
     # emotion = params.get('emotion', DEFAULT_CONDITION)
     # if emotion not in EMOTIONS_TYPES:
@@ -30,13 +26,14 @@ def get_model_response():
     #                                   (emotion, list(EMOTIONS_TYPES)), 400, _logger)
 
     # response = get_response(dialog_context, emotion)
+    dialog = [sentence]
     emotion = "joy"
-    response = get_response(dialog_context, emotion)
+    response = get_response(dialog, emotion)
 
     if not response:
-        _logger.error('No response for context: %s; emotion "%s"' % (dialog_context, emotion))
+        _logger.error('No response for context: %s; emotion "%s"' % (dialog, emotion))
         return jsonify({}), 200
 
-    _logger.info('Given response: "%s" for context: %s; emotion "%s"' % (response, dialog_context, emotion))
+    _logger.info('Given response: "%s" for context: %s; emotion "%s"' % (response, dialog, emotion))
 
     return jsonify({'response': response}), 200
