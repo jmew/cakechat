@@ -31,16 +31,15 @@ RUN apt-get update && apt-get install -y \
 # Install up-to-date pip
 RUN pip --no-cache-dir install -U pip
 
-WORKDIR /workspace
-
 # setup cakechat and install dependencies
-COPY . /workspace
-RUN pip --no-cache-dir install -r /workspace/cakechat/requirements.txt --process-dependency-links
-RUN python /workspace/cakechat/bin/cakechat_server.py
+COPY . /root
+RUN pip --no-cache-dir install -r /root/cakechat/requirements.txt --process-dependency-links
+RUN python /root/cakechat/bin/cakechat_server.py
 
 # setup Tensorboard for monitoring the training process
 RUN pip install tensorflow-tensorboard==$TENSORBOARD_VERSION tensorflow==$TENSORFLOW_VERSION
-RUN mkdir -p /workspace/cakechat/data/tensorboard
+RUN mkdir -p /root/cakechat/data/tensorboard
 
+WORKDIR /root/cakechat
 CMD (tensorboard --logdir=data/tensorboard 2>data/tensorboard/err.log &); \
     /bin/bash
