@@ -36,4 +36,4 @@ def get_model_response():
 
     _logger.info('Given response: "%s" for context: %s; emotion "%s"' % (response, dialog, emotion))
 
-    return jsonify({'response': response}), 200
+    return jsonify(fulfillmentText=response), 200
