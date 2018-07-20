@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 
 from cakechat.api.response import get_response
-from cakechat.api.context_man import *
 from cakechat.api.utils import get_api_error_response, parse_dataset_param
 from cakechat.config import EMOTIONS_TYPES, DEFAULT_CONDITION
 from cakechat.utils.logger import get_logger
@@ -10,7 +9,6 @@ from cakechat.utils.profile import timer
 _logger = get_logger(__name__)
 
 app = Flask(__name__)
-contextMan = ContextManager()
 
 @app.route('/felix_api/v1/actions/get_response', methods=['POST'])
 @timer
@@ -19,7 +17,8 @@ def get_model_response():
     _logger.info('request params: %s' % params)
 
     df_req = params['queryResult']
-    sentence = df_req['queryText']
+    context = df_req['outputContexts']['parameters']['messages'];
+    # sentence = df_req['queryText']
 
     # emotion = params.get('emotion', DEFAULT_CONDITION)
     # if emotion not in EMOTIONS_TYPES:
@@ -27,13 +26,12 @@ def get_model_response():
     #                                   (emotion, list(EMOTIONS_TYPES)), 400, _logger)
 
     # response = get_response(dialog_context, emotion)
-    dialog = contextMan.get_contexts(sentence)
+    dialog = contextMan.get_contexts(context)
     emotion = "neutral"
     response = get_response(dialog, emotion)
 
     if not response:
         _logger.error('No response for context: %s; emotion "%s"' % (dialog, emotion))
-        # TODO: shouldn't you return some other response code?
         return jsonify({}), 200
 
     contextMan.update_contexts(response)
