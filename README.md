@@ -1,3 +1,17 @@
+# FYDP Steps
+To run the server
+```
+docker build -t felix:latest -f Dockerfile.cpu .
+docker kill felix
+docker rm felix
+docker run --name felix -p 8080:8080 -d --restart felix bash -c "python bin/cakechat_server.py"
+```
+
+To view the console of the server
+```
+docker logs felix
+```
+
 # CakeChat: Emotional Generative Dialog System
 
 CakeChat is a dialog system that is able to express emotions in a text conversation. [Try it online!](https://cakechat.replika.ai/)
